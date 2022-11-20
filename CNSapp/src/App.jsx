@@ -23,7 +23,7 @@ const App = () => {
   const [registry, setRegistry] = useState([]);
   const [currentTransaction, setCurrentTransaction] = useState("");
   const [openSeaLink, setOpenSeaLink] = useState("");
-  const [modalStatus, setModalStatus] = useState(false);
+  const [modalStatus, setModalStatus] = useState(true);
 
   const connectWallet = async () => {
     try {
@@ -169,7 +169,7 @@ const App = () => {
           );
           //Set transaction
 
-          let currentToken = await contract.getCurrentCount();
+          let currentToken = await contract.getCurrentCount() - 1;
           setOpenSeaLink(`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${currentToken}`)
           setCurrentTransaction("https://mumbai.polygonscan.com/tx/" + txn.hash)
           txn = await contract.setRecord(domain, record);
@@ -275,6 +275,9 @@ const App = () => {
   }, [currentAccount, network]);
 
 
+  const toggleModal = () => {
+    setModalStatus(!modalStatus);
+  }
 
 
   //Render Methods
@@ -326,7 +329,7 @@ const App = () => {
           onChange={e => setRecord(e.target.value)}
         />
 
-        {loading ? <MoonLoader color="#36d7b7" speedMultiplier={0.3} /> : null}
+
 
           {/* If the editing variable is true, return the "Set record" and "Cancel" button */}
           {editing ? (
@@ -346,6 +349,7 @@ const App = () => {
               <button className='cta-button mint-button' disabled={loading} onClick={registerDomain}>
                 Register CNS Name
               </button>
+              <small>This will trigger multiple transactions</small>
               <button onClick={setEditing} className="register-prompt-button">Set CNS Record?</button>
             </div>
           )}
@@ -391,12 +395,15 @@ const App = () => {
 
   const renderOpenSeaModal = () => {
     return (
-      <div className="modal" onClick={setModalStatus}>
+      <div>
+        <div className="modal" onClick={toggleModal}>
+        </div>
         <div className="modal-card">
           <h1>Your CNS name has been registered</h1>
-          <p>View your transaction on Mumbai here: {currentTransaction}</p>
-          <h2>View your domain name has been registered, view it here:</h2>
-          <p>{openSeaLink}</p>
+          <p>View your transaction on Mumbai</p>
+          <a class="link underline" target="_blank" href={currentTransaction} rel="noreferrer">Polygon</a>
+          <h3>Thank you for being a part of the CNS ecosystem!<wbr /> View your name on OpenSea here!</h3>
+          <a class="link underline" target="_blank" href={openSeaLink} rel="noreferrer">OpenSea</a>
         </div>
       </div>
     )
@@ -439,6 +446,9 @@ const App = () => {
 
         {!currentAccount && renderNotConnectedContainer()}
         {currentAccount && renderInputForm()}
+        <div className="spinner">
+        {loading ? <MoonLoader color="#36d7b7" speedMultiplier={0.3} /> : null}
+        </div>
         {registry && renderRegistry()}
 
         <footer className="footer-container">

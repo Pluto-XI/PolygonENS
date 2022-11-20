@@ -28,17 +28,41 @@ html {
 
 .modal-card {
   background-color: rgb(27, 27, 27);
+  position: absolute;
+  z-index: 2;
+  left: 10%;
+  top: 10%;
   width: 80%;
   height: 80%;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
-.modal-card h1 {
-  padding-top: 5rem;
+.modal-card a {
+  background-color: #349dff;
+  padding: 1rem 3rem;
+  border-radius: 1.5rem;
+  margin: 1rem;
+  color: white;
+  transition: .3s;
+}
+
+.modal-card a:hover {
+  background-color: #7fd0ff;
+}
+
+.modal-card p, .modal-card h3, .modal-card h1 {
+  padding: 1rem;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -74,6 +98,7 @@ html {
   animation: gradient-animation 2s ease-in infinite;
   border-radius: 20px;
   padding: 0px 2rem;
+  margin-top: .4rem;
 }
 
 .cloud-image {
@@ -98,6 +123,7 @@ header{
 .subtitle {
   font-size: 25px;
   color: white;
+  margin-top: 1rem;
 }
 
 .left{
@@ -166,7 +192,7 @@ header{
   font-size: 18px;
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
-  margin: 20px 10px;
+  margin: 0 10px;
   border-radius: 20px;
   padding: 0px 2rem;
 }
@@ -226,6 +252,13 @@ header{
   align-items: center;
 }
 
+
+.form-container small {
+  padding: 5px;
+  font-size: .72rem;
+  color: #8d8787;
+}
+
 input {
   border: 0;
   border-radius: 12px;
@@ -234,7 +267,7 @@ input {
   letter-spacing: 1px;
   font-size: 22px;
   max-width: 80%;
-  margin-bottom: 10px;
+  margin-bottom: 1.5rem;
   padding: 10px 20px;
   text-align: center;
 }
@@ -275,7 +308,7 @@ input:focus {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: .5rem;
 }
 
 .mint-item {
