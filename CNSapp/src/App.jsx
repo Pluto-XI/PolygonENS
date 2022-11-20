@@ -164,6 +164,11 @@ const App = () => {
           console.log(
             "Record set! https://mumbai.polygonscan.com/tx/" + txn.hash
           );
+
+          setTimeout(() => {
+            getRegistry();
+          }, 2000);
+
           setRecord("");
           setDomain("");
         } else {
@@ -321,6 +326,42 @@ const App = () => {
     );
   }
 
+  const renderRegistry = () => {
+    if (currentAccount && registry.length > 0) {
+      return (
+        <div className="mint-container">
+          <p className="subtitle"> Recently registered domains!</p>
+          <div className="mint-list">
+            { registry.map((registry, index) => {
+              return (
+                <div className="mint-item" key={index}>
+                  <div className='mint-row'>
+                    <a className="link" href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${registry.id}`} target="_blank" rel="noopener noreferrer">
+                      <p className="underlined">{' '}{registry.name}{tld}{' '}</p>
+                    </a>
+                    {/* If mint.owner is currentAccount, add an "edit" button*/}
+                    { registry.owner.toLowerCase() === currentAccount.toLowerCase() ?
+                      <button className="edit-button" onClick={() => editRecord(registry.name)}>
+                        <img className="edit-icon" src="https://img.icons8.com/metro/26/000000/pencil.png" alt="Edit button" />
+                      </button>
+                      :
+                      null
+                    }
+                  </div>
+            <p> {registry.record} </p>
+          </div>)
+          })}
+        </div>
+      </div>);
+    }
+  };
+
+  const editRecord = (name) => {
+    console.log("Editing record for", name);
+    setEditing(true);
+    setDomain(name);
+  }
+
   //This runs our function when the page loads
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -357,6 +398,7 @@ const App = () => {
 
         {!currentAccount && renderNotConnectedContainer()}
         {currentAccount && renderInputForm()}
+        {registry && renderRegistry()}
 
         <footer className="footer-container">
           <p className="footer-text">
