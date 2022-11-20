@@ -133,6 +133,10 @@ contract Domains is ERC721URIStorage{
         records[name] = record;
     }
 
+    function getCurrentCount() public view returns (uint) {
+        return _tokenIds.current();
+    }
+
 
     modifier onlyOwner() {
         require(isOwner());
