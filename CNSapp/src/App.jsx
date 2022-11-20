@@ -3,6 +3,9 @@ import "./styles/App.css";
 import './assets/clouds.jpg';
 import { ethers } from "ethers";
 import DomainsAbi from './utils/Domains.json';
+import polygonLogo from './assets/polygonlogo.png';
+import ethLogo from './assets/ethlogo.png';
+import { networks } from './utils/networks'
 
 // Constants;
 const CONTRACT_ADDRESS = '0xBB149a288CFa18ecb04920A1b42844955232ab04';
@@ -15,6 +18,7 @@ const App = () => {
   const [domain, setDomain] = useState('');
   const [loading, setLoading] = useState(false);
   const [record, setRecord] = useState('');
+  const [network, setNetwork] = useState('');
 
   const connectWallet = async () => {
     try {
@@ -57,6 +61,16 @@ const App = () => {
       setCurrentAccount(account);
     } else {
       console.log("No authorized account found");
+    }
+
+    //Check user's network chain ID
+    const chainId = await ethereum.request({ method: 'eth_chainId' });
+    setNetwork(networks[chainId]);
+
+    ethereum.on('chainChanged', handleChainChanged);
+
+    function handleChainChanged(_chainId) {
+      window.location.reload();
     }
   };
 
@@ -205,6 +219,11 @@ const App = () => {
             <div className="left">
               <p className="title">☁️ Cloud Name Service</p>
               <p className="subtitle">Your celestial API on the blockchain.</p>
+            </div>
+            {/* Display a logo and wallet connect status*/}
+            <div className="right">
+              <img alt="Network logo" className="logo" src={ network.includes("Polygon") ? polygonLogo : ethLogo} />
+              { currentAccount ? <p> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p> Not connected </p> }
             </div>
           </header>
         </div>

@@ -27,6 +27,7 @@ html {
   width: 100%;
 }
 
+
 header{
   display: flex;
   flex-direction: row;
@@ -301,4 +302,20 @@ input:focus {
   100% {
     background-position: 0% 50%;
   }
+}
+
+@media (max-width: 561px) {
+  header {
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  header div.right {
+    max-width: fit-content;
+    font-size: .8rem;
+  }
+
 }
