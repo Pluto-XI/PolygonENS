@@ -9,9 +9,8 @@ import { networks } from "./utils/networks";
 import { MoonLoader } from "react-spinners";
 
 // Constants;
-const CONTRACT_ADDRESS = "0xBB149a288CFa18ecb04920A1b42844955232ab04";
+const CONTRACT_ADDRESS = "0x540E95a319260c6B64d7D3B44c9d6Eff169eDB4b";
 const tld = ".cloud";
-// const zeroAddress = "0x0000000000000000000000000000000000000000";
 
 const App = () => {
   //State variable for user's public wallet
@@ -22,6 +21,9 @@ const App = () => {
   const [record, setRecord] = useState("");
   const [network, setNetwork] = useState("");
   const [registry, setRegistry] = useState([]);
+  const [currentTransaction, setCurrentTransaction] = useState("");
+  const [openSeaLink, setOpenSeaLink] = useState("");
+  const [modalStatus, setModalStatus] = useState(false);
 
   const connectWallet = async () => {
     try {
@@ -133,8 +135,7 @@ const App = () => {
 
     //Calculate price based on length of domain
     //3 chars = .4 matic, 4 chars = .2 matic, 5+ chars = .01 matic
-    const price =
-      domain.length === 3 ? "0.4" : domain.length === 4 ? "0.2" : "0.01";
+    const price = domain.length === 3 ? "0.4" : domain.length === 4 ? "0.2" : "0.01";
     console.log("Registering domain", domain, "with price", price);
 
     try {
@@ -153,15 +154,24 @@ const App = () => {
           value: ethers.utils.parseEther(price),
         });
 
+        //Set current transaction state to display
+        setOpenSeaLink("");
+        setCurrentTransaction("");
         setLoading(true);
-
+    
         //Wait for txn to be mined
         const receipt = await txn.wait();
+
 
         if (receipt.status === 1) {
           console.log(
             "Domain registered! https://mumbai.polygonscan.com/tx/" + txn.hash
           );
+          //Set transaction
+
+          let currentToken = await contract.getCurrentCount();
+          setOpenSeaLink(`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${currentToken}`)
+          setCurrentTransaction("https://mumbai.polygonscan.com/tx/" + txn.hash)
           txn = await contract.setRecord(domain, record);
           await txn.wait();
 
@@ -170,6 +180,8 @@ const App = () => {
           console.log(
             "Record set! https://mumbai.polygonscan.com/tx/" + txn.hash
           );
+
+          setModalStatus(true);
 
           setTimeout(() => {
             getRegistry();
@@ -379,11 +391,12 @@ const App = () => {
 
   const renderOpenSeaModal = () => {
     return (
-      <div className="modal">
+      <div className="modal" onClick={setModalStatus}>
         <div className="modal-card">
           <h1>Your CNS name has been registered</h1>
-          <p>View your transaction on OpenSea here</p>
-          
+          <p>View your transaction on Mumbai here: {currentTransaction}</p>
+          <h2>View your domain name has been registered, view it here:</h2>
+          <p>{openSeaLink}</p>
         </div>
       </div>
     )
@@ -396,7 +409,7 @@ const App = () => {
 
   return (
     <div className="App">
-      {renderOpenSeaModal()}
+      {modalStatus ? renderOpenSeaModal() : null}
       <div className="container">
         <div className="header-container">
           <header>
