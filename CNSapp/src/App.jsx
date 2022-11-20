@@ -9,7 +9,7 @@ import { networks } from "./utils/networks";
 import { MoonLoader } from "react-spinners";
 
 // Constants;
-const CONTRACT_ADDRESS = "0x540E95a319260c6B64d7D3B44c9d6Eff169eDB4b";
+const CONTRACT_ADDRESS = "0x009613959Ba81ED6A1e6B5fde97f1De9d01ae8e6";
 const tld = ".cloud";
 
 const App = () => {

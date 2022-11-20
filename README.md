@@ -2,7 +2,9 @@
 This is a project I created to learn a bit more about how domain naming systems work and how to work on a Layer 2 solution for Ethereum. This project
 was deployed on the Polygon Mumbai testnet. I definitely found this project to be super exciting. This readme is here to document what I learned during the process and the big takeaways I got out of it. Thank you to the buildspace community!
 
-The Cloud Name Service, or CNS is located on the Mumbai testnet here: https://mumbai.polygonscan.com/address/0x540E95a319260c6B64d7D3B44c9d6Eff169eDB4b
+The live project is hosted here: https://lighthearted-clafoutis-e22c64.netlify.app/
+
+The Cloud Name Service, or CNS is located on the Mumbai testnet here: https://mumbai.polygonscan.com/address/0x009613959Ba81ED6A1e6B5fde97f1De9d01ae8e6
 
 ## Local Environment
 To set our our local dev environment we used Hardhat. It's a really cool tool and allows us to spin up blockchains on our local machine. We just used
