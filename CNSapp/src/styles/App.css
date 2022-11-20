@@ -21,6 +21,10 @@ p {
   padding-top: 30px;
 }
 
+.cloud-image {
+  width: 100%;
+}
+
 header{
   display: flex;
   flex-direction: row;
