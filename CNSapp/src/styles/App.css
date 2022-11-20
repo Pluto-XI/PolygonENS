@@ -23,6 +23,28 @@ html {
   padding-top: 30px;
 }
 
+.register-set-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-prompt-button {
+  height: 25px;
+  border: 0;
+  min-width: min-content;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  background: -webkit-linear-gradient(left, #7fd0ff, #349dff);
+  background-size: 200% 200%;
+  animation: gradient-animation 2s ease-in infinite;
+  border-radius: 20px;
+  padding: 0px 2rem;
+}
+
 .cloud-image {
   width: 100%;
 }
@@ -71,6 +93,8 @@ header{
 .content-container {
   background-color: #a200d6;
 }
+
+
 
 .cta-button {
   height: 45px;
@@ -121,7 +145,7 @@ header{
 }
 
 .mint-button:disabled{
-  background: #550072;
+  background: #0e426d;
   color: rgb(209, 209, 209);
   cursor: not-allowed;
 }
