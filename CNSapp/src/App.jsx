@@ -6,11 +6,12 @@ import DomainsAbi from "./utils/Domains.json";
 import polygonLogo from "./assets/polygonlogo.png";
 import ethLogo from "./assets/ethlogo.png";
 import { networks } from "./utils/networks";
+import { MoonLoader } from "react-spinners";
 
 // Constants;
 const CONTRACT_ADDRESS = "0xBB149a288CFa18ecb04920A1b42844955232ab04";
 const tld = ".cloud";
-const zeroAddress = "0x0000000000000000000000000000000000000000";
+// const zeroAddress = "0x0000000000000000000000000000000000000000";
 
 const App = () => {
   //State variable for user's public wallet
@@ -151,6 +152,9 @@ const App = () => {
         let txn = await contract.register(domain, {
           value: ethers.utils.parseEther(price),
         });
+
+        setLoading(true);
+
         //Wait for txn to be mined
         const receipt = await txn.wait();
 
@@ -160,6 +164,8 @@ const App = () => {
           );
           txn = await contract.setRecord(domain, record);
           await txn.wait();
+
+          setLoading(false);
 
           console.log(
             "Record set! https://mumbai.polygonscan.com/tx/" + txn.hash
@@ -173,6 +179,7 @@ const App = () => {
           setDomain("");
         } else {
           alert("Transaction failed! Please try again");
+          setLoading(false);
         }
       }
     } catch (error) {
@@ -197,9 +204,14 @@ const App = () => {
           signer
         );
 
+        //Set loading animation
+        setLoading(true);
+
         let tx = await contract.setRecord(domain, record);
         await tx.wait();
         console.log("Record set https://mumbai.polygonscan.com/tx/" + tx.hash);
+
+        setLoading(false);
 
         setTimeout(() => {
           getRegistry();
@@ -301,6 +313,9 @@ const App = () => {
           placeholder='Enter your URI'
           onChange={e => setRecord(e.target.value)}
         />
+
+        {loading ? <MoonLoader color="#36d7b7" speedMultiplier={0.3} /> : null}
+
           {/* If the editing variable is true, return the "Set record" and "Cancel" button */}
           {editing ? (
             <div className="button-container">
@@ -362,6 +377,18 @@ const App = () => {
     setDomain(name);
   }
 
+  const renderOpenSeaModal = () => {
+    return (
+      <div className="modal">
+        <div className="modal-card">
+          <h1>Your CNS name has been registered</h1>
+          <p>View your transaction on OpenSea here</p>
+          
+        </div>
+      </div>
+    )
+  };
+
   //This runs our function when the page loads
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -369,6 +396,7 @@ const App = () => {
 
   return (
     <div className="App">
+      {renderOpenSeaModal()}
       <div className="container">
         <div className="header-container">
           <header>
