@@ -23,7 +23,7 @@ const App = () => {
   const [registry, setRegistry] = useState([]);
   const [currentTransaction, setCurrentTransaction] = useState("");
   const [openSeaLink, setOpenSeaLink] = useState("");
-  const [modalStatus, setModalStatus] = useState(true);
+  const [modalStatus, setModalStatus] = useState(false);
 
   const connectWallet = async () => {
     try {
