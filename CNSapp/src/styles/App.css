@@ -1,6 +1,5 @@
 .App {
   height: 100vh;
-  background-color: #0d1116;
   text-align: center;
   color: white;
 }
@@ -9,9 +8,12 @@ p {
   margin:0;
 }
 
+html {
+  background-color: #181818;
+}
+
 .container {
   height: 100%;
-  background-color: #181818;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -29,7 +31,7 @@ header{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 10px 10px 10px 10px;
+  padding: 3rem 1rem;
 }
 
 .title {
@@ -108,7 +110,7 @@ header{
 }
 
 .mint-button {
-  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  background: -webkit-linear-gradient(left, #7fd0ff, #349dff);
   font-size: 18px;
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
@@ -147,8 +149,9 @@ header{
 .footer-container {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding-bottom: 30px;
+  padding: 1rem;
 }
 
 .twitter-logo {
@@ -160,24 +163,25 @@ header{
   color: white;
   font-size: 16px;
   font-weight: bold;
+  max-width: 50ch;
 }
 
 .form-container{
   display: flex;
-  width: 100%;
+  max-width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-input{
+input {
   border: 0;
   border-radius: 12px;
   background-color: black;
   color: white;
   letter-spacing: 1px;
-  font-size: 26px;
-  width: 400px;
+  font-size: 22px;
+  max-width: 80%;
   margin-bottom: 10px;
   padding: 10px 20px;
   text-align: center;
@@ -195,11 +199,10 @@ input:focus {
 .first-row{
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-
+  max-width: 100%;
 }
 
 .tld {
@@ -208,10 +211,10 @@ input:focus {
   font-weight: bold;
   color: white;
   /* left: -70px; */
-  right: 22px;
+  right: 2.5rem;
+  top: .6rem;
   margin: 0;  
   padding: 0;
-  margin-bottom: 13px;
 }
 
 .mint-list {

@@ -7,6 +7,7 @@ import DomainsAbi from './utils/Domains.json';
 // Constants;
 const CONTRACT_ADDRESS = '0x7fb383937344c03cb1cf456795446c786209ebc5';
 const tld = '.cloud';
+const zeroAddress = '0x0000000000000000000000000000000000000000';
 
 const App = () => {
   //State variable for user's public wallet
@@ -104,6 +105,43 @@ const App = () => {
     }
   }
 
+  const setDomainRecord = async () => {
+    //Don't run if the domain is empty
+    if (!domain) { return };
+
+    //Alert the user if the domain is too short
+    if (domain.length < 3) {
+      alert("Domain must be at least 3 characters long");
+      return;
+    }
+
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, DomainsAbi.abi, signer);
+
+        let txn = await contract.getAddress(domain);
+        if (txn !== zeroAddress) {
+          try {
+            txn = await contract.setRecord(domain, record);
+            await txn.wait();
+            console.log("Record set! https://mumbai.polygonscan.com/tx/" + txn.hash);
+            setRecord('');
+            setDomain('');
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          alert("Not a registered domain.");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
 
   //Render Methods
@@ -130,20 +168,25 @@ const App = () => {
             onChange={e => setDomain(e.target.value)}
           />
           <p className="tld"> {tld} </p>
-        </div>
         <input
             type="text"
             value={record}
             placeholder="Set record to your URI"
             onChange={e => setRecord(e.target.value)}
-          />
+            />
+            </div>
           <div className="button-container">
+            <div>
             <button className="cta-button mint-button" disabled={null} onClick={registerDomain}>
               Register CNS Name
             </button>
-            {/* <button className="cta-button mint-button" disabled={null} onClick={null}>
+            <button className="cta-button mint-button" disabled={null} onClick={setDomainRecord}>
               Set CNS Record
-            </button> */}
+            </button>
+            </div>
+            <button className="cta-button mint-button" disabled={null} onClick={setDomainRecord}>
+              View CNS Record
+            </button>
           </div>
       </div>
     );
@@ -169,9 +212,9 @@ const App = () => {
         {!currentAccount && renderNotConnectedContainer()}
         {currentAccount && renderInputForm()}
 
-      <footer>
-        <p>This is project was created to learn how DNS systems are created and put in place on the Ethereum blockchain. This solution was deployed using a React front-end and the contract itself is deployed on Mumbai. If you are interested in seeing the code and how this was made, please take a look at my Github <a target="_blank" href="https://github.com/Pluto-XI/PolygonENS" rel="noreferrer">here</a></p>
-        <p>If you're in need of some eth, use the <a target="_blank" href="https://mumbaifaucet.com/" rel="noreferrer">Mumbai faucet</a></p>
+      <footer className="footer-container">
+        <p className="footer-text">This is project was created to learn how DNS systems are created and put in place on the Ethereum blockchain. This solution was deployed using a React front-end and the contract itself is deployed on Mumbai. If you are interested in seeing the code and how this was made, please take a look at my Github <a target="_blank" href="https://github.com/Pluto-XI/PolygonENS" rel="noreferrer">here</a></p>
+        <p className="footer-text">If you're in need of some eth, use the <a target="_blank" href="https://mumbaifaucet.com/" rel="noreferrer">Mumbai faucet</a></p>
       </footer>
       </div>
     </div>
