@@ -93,17 +93,18 @@ const App = () => {
         if (error.code === 4902) {
           try {
             await window.ethereum.request({
-              method: "wallet_addEthereumChain",
+              method: 'wallet_addEthereumChain',
               params: [
-                {
-                  chainName: "Polygon Mumbai Testnet",
-                  rpcUrls: ["https://rpc-mumbai.maticvigil.com/"],
+                {	
+                  chainId: '0x13881',
+                  chainName: 'Mumbai',
+                  rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
                   nativeCurrency: {
-                    name: "Mumbai Matic",
-                    symbol: "MATIC",
-                    decimals: 18,
+                      name: "Mumbai Matic",
+                      symbol: "MATIC",
+                      decimals: 18
                   },
-                  blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+                  blockExplorerUrls: ["https://mumbai.polygonscan.com/"]
                 },
               ],
             });
@@ -304,7 +305,7 @@ const App = () => {
     if (network !== 'Polygon Mumbai Testnet') {
       return (
         <div className="connect-wallet-container">
-          <p>Please connect to Polygon Mumbai Testnet</p>
+          <p className="su">Please connect to Polygon Mumbai Testnet</p>
           <button className='cta-button mint-button' onClick={switchNetwork}>Click here to switch</button>
         </div>
       );

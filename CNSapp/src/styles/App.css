@@ -169,6 +169,10 @@ header{
   max-width: 550px;
 }
 
+.connect-wallet-container p {
+  margin-bottom: 1rem;
+}
+
 .connect-wallet-container img {
   padding-bottom: 20px;
 }
