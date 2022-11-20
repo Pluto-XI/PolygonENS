@@ -196,7 +196,9 @@ const App = () => {
         await tx.wait();
         console.log("Record set https://mumbai.polygonscan.com/tx/" + tx.hash);
 
-        // fetchMints();
+        setTimeout(() => {
+          getRegistry();
+        }, 2000);
         setRecord("");
         setDomain("");
       }
@@ -205,6 +207,46 @@ const App = () => {
     }
     setLoading(false);
   };
+
+  const getRegistry = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, DomainsAbi.abi, signer);
+
+        //Get all domains from the contract
+        const names = await contract.getAllNames();
+
+        //For each name, get the record and address
+        const registryRecords = await Promise.all(names.map(async (name) => {
+          const registryRecord = await contract.records(name);
+          const owner = await contract.domains(name);
+          return {
+            id: names.indexOf(name),
+            name: name,
+            record: registryRecord,
+            owner: owner,
+          };
+        }));
+
+        console.log("Registry fetched ", registryRecords);
+        setRegistry(registryRecords);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (network === 'Polygon Mumbai Testnet') {
+      getRegistry();
+    }
+  }, [currentAccount, network]);
+
+
+
 
   //Render Methods
   //Create a function to render if wallet is not connect yet.
