@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import DomainsAbi from './utils/Domains.json';
 
 // Constants;
-const CONTRACT_ADDRESS = '0x7fb383937344c03cb1cf456795446c786209ebc5';
+const CONTRACT_ADDRESS = '0xBB149a288CFa18ecb04920A1b42844955232ab04';
 const tld = '.cloud';
 const zeroAddress = '0x0000000000000000000000000000000000000000';
 
