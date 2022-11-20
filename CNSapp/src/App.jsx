@@ -159,6 +159,7 @@ const App = () => {
         setOpenSeaLink("");
         setCurrentTransaction("");
         setLoading(true);
+        let currentToken = await contract.getCurrentCount();
     
         //Wait for txn to be mined
         const receipt = await txn.wait();
@@ -168,11 +169,11 @@ const App = () => {
           console.log(
             "Domain registered! https://mumbai.polygonscan.com/tx/" + txn.hash
           );
-          //Set transaction
 
-          let currentToken = await contract.getCurrentCount() - 1;
+          //Set transaction
           setOpenSeaLink(`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${currentToken}`)
           setCurrentTransaction("https://mumbai.polygonscan.com/tx/" + txn.hash)
+          
           txn = await contract.setRecord(domain, record);
           await txn.wait();
 
@@ -196,6 +197,7 @@ const App = () => {
         }
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
