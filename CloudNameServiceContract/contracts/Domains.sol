@@ -30,10 +30,16 @@ contract Domains is ERC721URIStorage{
     //This mapping is going to be used to store the data associated with our domains.
     mapping(string => string) public records;
 
+    mapping (uint => string) public names;
+
     constructor(string memory _tld) payable ERC721('Cloud Name Service', 'CNS') {
         owner = payable(msg.sender);
         tld = _tld;
         console.log("%s name service deployed", _tld);
+    }
+
+    function valid(string calldata name) public pure returns(bool) {
+        return StringUtils.strlen(name) >= 3 && StringUtils.strlen(name) <= 11;
     }
 
     //Give a price based on the domain length
@@ -55,7 +61,9 @@ contract Domains is ERC721URIStorage{
     function register(string calldata name) public payable {
         //Require checks that the name is unregistered, not in our mapping
         //checks the address of the main you're trying to register is the same as the zero address. When a mapping is initialized, all entries point to the zero address.
-        require(domains[name] == address(0), "Domain name is already registered");
+        // require(domains[name] == address(0), "Domain name is already registered");
+        if (domains[name] != address(0)) revert AlreadyRegistered();
+        if (!valid(name)) revert InvalidName(name);
 
         uint _price = price(name);
 
@@ -91,6 +99,8 @@ contract Domains is ERC721URIStorage{
         _setTokenURI(newRecordId, finalTokenUri);
         domains[name] = msg.sender;
         console.log("%s has registered the domain '%s'", msg.sender, name);
+
+        names[newRecordId] = name;
         _tokenIds.increment();
     }
 
@@ -102,16 +112,27 @@ contract Domains is ERC721URIStorage{
         return domains[name];
     }
 
-
-    function setRecord(string calldata name, string calldata record) public {
-        //Check that the owner is the transaction sender
-        require(domains[name] == msg.sender, "Domain does not belong to your address");
-        records[name] = record;
-    }
-
     function getRecord(string calldata name) public view returns (string memory) {
         return records[name];
     }
+
+    function getAllNames() public view returns (string[] memory) {
+        console.log("Getting all names from contract");
+        string[] memory allNames = new string[](_tokenIds.current());
+        for (uint i = 0; i < _tokenIds.current(); i++) {
+            allNames[i] = names[i];
+            console.log("Name for token %d is %s", i, allNames[i]);
+        }
+
+        return allNames;
+    }
+
+    function setRecord(string calldata name, string calldata record) public {
+        //Check that the owner is the transaction sender
+        if (msg.sender != domains[name]) revert Unauthorized();
+        records[name] = record;
+    }
+
 
     modifier onlyOwner() {
         require(isOwner());
@@ -127,6 +148,10 @@ contract Domains is ERC721URIStorage{
         (bool success, ) = msg.sender.call{value: amount}("");
         require(success, "Failed to withdraw Matic");
     }
+
+    error Unauthorized();
+    error AlreadyRegistered();
+    error InvalidName(string name);
 
 }
 
