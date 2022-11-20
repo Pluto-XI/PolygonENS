@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./styles/App.css";
 import './assets/clouds.jpg';
 import { ethers } from "ethers";
+import DomainsAbi from './utils/Domains.json';
 
 // Constants;
 const CONTRACT_ADDRESS = '0x7fb383937344c03cb1cf456795446c786209ebc5';
@@ -58,6 +59,51 @@ const App = () => {
     }
   };
 
+  const registerDomain = async () => {
+    //Don't run if the domain is empty
+    if (!domain) { return };
+
+    //Alert the user if the domain is too short
+    if (domain.length < 3) {
+      alert("Domain must be at least 3 characters long");
+      return;
+    }
+
+    //Calculate price based on length of domain
+    //3 chars = .4 matic, 4 chars = .2 matic, 5+ chars = .01 matic
+    const price = domain.length === 3 ? '0.4' : domain.length === 4 ? '0.2' : '0.01';
+    console.log("Registering domain", domain, "with price", price);
+
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, DomainsAbi.abi, signer);
+
+        console.log("Pop wallet and pay gas...");
+        let txn = await contract.register(domain, {value: ethers.utils.parseEther(price)});
+        //Wait for txn to be mined
+        const receipt = await txn.wait();
+
+        if (receipt.status === 1) {
+          console.log("Domain registered! https://mumbai.polygonscan.com/tx/" + txn.hash);
+          txn = await contract.setRecord(domain, record);
+          await txn.wait();
+
+          console.log("Record set! https://mumbai.polygonscan.com/tx/" + txn.hash);
+          setRecord('');
+          setDomain('');
+
+        } else {
+          alert("Transaction failed! Please try again");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
 
   //Render Methods
@@ -92,12 +138,12 @@ const App = () => {
             onChange={e => setRecord(e.target.value)}
           />
           <div className="button-container">
-            <button className="cta-button mint-button" disabled={null} onClick={null}>
+            <button className="cta-button mint-button" disabled={null} onClick={registerDomain}>
               Register CNS Name
             </button>
-            <button className="cta-button mint-button" disabled={null} onClick={null}>
+            {/* <button className="cta-button mint-button" disabled={null} onClick={null}>
               Set CNS Record
-            </button>
+            </button> */}
           </div>
       </div>
     );
